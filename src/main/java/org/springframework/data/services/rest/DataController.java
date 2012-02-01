@@ -50,6 +50,7 @@ import com.mongodb.util.JSON;
  * Generic REST API for MongoDB collections.
  */
 @Controller
+@RequestMapping(produces = "application/json")
 public class DataController {
 
 	private final MongoTemplate mongoTemplate;
@@ -114,7 +115,7 @@ public class DataController {
 		Query query = new Query(Criteria.where("uid").is(uid));
 		List<DBObject> results = this.mongoTemplate.find(query, DBObject.class, collection);
 		if (CollectionUtils.isEmpty(results)) {
-			return null;
+			return null; // 404?
 		}
 		DBObject result = results.get(0);
 		result.removeField("_class");
