@@ -18,8 +18,10 @@ package org.springframework.data.services.rest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -69,6 +71,19 @@ public class DataController {
 				this.mongoTemplate.dropCollection(collection);
 			}
 		}
+	}
+
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@ResponseBody
+	public String showCollections() {
+		Set<String> results = new HashSet<String>();
+		Set<String> collections = this.mongoTemplate.getCollectionNames();
+		for (String collection : collections) {
+			if (!collection.contains("system")) {
+				results.add(collection);
+			}
+		}
+		return JSON.serialize(results);
 	}
 
 	@RequestMapping(value = "/{collection}", method = RequestMethod.GET)
